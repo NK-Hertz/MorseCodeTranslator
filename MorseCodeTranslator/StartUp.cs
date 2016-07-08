@@ -12,16 +12,21 @@
             //var input = Console.ReadLine().Trim();
 
             // Change Bulgarian with English and vice versa 
-            var bgTranslator = new Translator(new Bulgarian());
-            var fromBgToMorse = bgTranslator.Translate(input);
-            Console.WriteLine(bgTranslator.LanguageName);
+            var myTranslator = new Translator(new Bulgarian());
+            var fromLanguageToMorse = myTranslator.Translate(input);
+            Console.WriteLine(myTranslator.LanguageName);
             Console.WriteLine();
 
-            Console.WriteLine(fromBgToMorse);
+            Console.WriteLine(fromLanguageToMorse);
             Console.WriteLine();
 
-            var fromMorseToBg = bgTranslator.Translate(fromBgToMorse);
-            Console.WriteLine(fromMorseToBg);
+            var fromMorseToLanguage = myTranslator.Translate(fromLanguageToMorse);
+            Console.WriteLine(fromMorseToLanguage);
+            Console.WriteLine();
+
+            var sos = "... --- ...";
+            var translatedSos = myTranslator.Translate(sos);
+            Console.WriteLine("{0} -> {1}", sos, translatedSos);
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿namespace MorseCodeTranslator
 {
+    using System;
     using System.Linq;
     using System.Text;
     using Languages;
-    using System.Collections.Generic;
+
     public class Translator
     {
         private const string MORSE_CODE_CHARACTERS = ".-/ ";
@@ -26,6 +27,11 @@
 
         public string Translate(string message)
         {
+            if (String.IsNullOrWhiteSpace(message))
+            {
+                throw new ArgumentNullException("Message can not be null, empty or consist only of white spaces!");
+            }
+
             string result;
             var isInMorseCode = IsMessageInMorse(message);
             if (!isInMorseCode)
