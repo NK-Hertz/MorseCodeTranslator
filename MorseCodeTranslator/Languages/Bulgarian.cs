@@ -2,16 +2,10 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
 
-    public class Bulgarian : ILanguage
+    public class Bulgarian : BaseLanguage
     {
-        private const char MORSE_CODE_CHAR_SEPARATOR = '/';
-        private const char LANGUAGE_WORD_SEPARATOR = ' ';
-        
-        // or use XML
-        public static Dictionary<char, string> Bulgarian_To_Morse
-         = new Dictionary<char, string>
+        private static readonly Dictionary<char, string> BulgarianAlphabetToMorse = new Dictionary<char, string>
          {
              ['а'] = ".-",
              ['б'] = "-...",
@@ -45,56 +39,23 @@
              ['я'] = ".-.-",
          };
 
-        public static Dictionary<string, char> Morse_To_Bulgarian = Bulgarian_To_Morse.ToDictionary(p => p.Value, p => p.Key);
+        private readonly Dictionary<char, string> alphabetToMorse;
+        private readonly Dictionary<string, char> alphabetFromMorse;
 
         public Bulgarian()
-        { }
-
-        public string ToMorse(string value)
         {
-            var builder = new StringBuilder();
-
-            var words = value.ToLower().Split(LANGUAGE_WORD_SEPARATOR).ToList();
-
-            for (int i = 0; i < words.Count; i++)
-            {
-                var currentWord = words[i];
-                for (int j = 0; j < currentWord.Length; j++)
-                {
-                    var currentLetterInMorse = Bulgarian_To_Morse[currentWord[j]];
-                    builder.Append(currentLetterInMorse);
-
-                    if (j != currentWord.Length - 1)
-                    {
-                        builder.Append(MORSE_CODE_CHAR_SEPARATOR);
-                    }
-                }
-
-                builder.Append(LANGUAGE_WORD_SEPARATOR);
-            }
-
-            return builder.ToString().Trim();
+            this.alphabetToMorse = BulgarianAlphabetToMorse;
+            this.alphabetFromMorse = BulgarianAlphabetToMorse.ToDictionary(p => p.Value, p => p.Key);
         }
 
-        public string FromMorse(string value)
+        public override Dictionary<char, string> AlphabetToMorse
         {
-            var builder = new StringBuilder();
+            get { return this.alphabetToMorse; }
+        }
 
-            var words = value.Split(LANGUAGE_WORD_SEPARATOR).ToList();
-
-            for (int i = 0; i < words.Count; i++)
-            {
-                var currentWord = words[i].Split(MORSE_CODE_CHAR_SEPARATOR);
-                for (int j = 0; j < currentWord.Length; j++)
-                {
-                    var currentLetterInLanguage = Morse_To_Bulgarian[currentWord[j]];
-                    builder.Append(currentLetterInLanguage);
-                }
-
-                builder.Append(LANGUAGE_WORD_SEPARATOR);
-            }
-
-            return builder.ToString().Trim();
+        public override Dictionary<string, char> AlphabetFromMorse
+        {
+            get { return this.alphabetFromMorse; }
         }
     }
 }

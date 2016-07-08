@@ -9,13 +9,17 @@
     {
         public static void Main()
         {
-            //var input = "Каменица и цаца"; 
-            var input = Console.ReadLine().Trim();
+            var input = "Освен това бе забелязал, че магарето, този неразбран от хората четириног мислител, заплашително мърда уши, когато философите говорят глупости.";
+            //var input = Console.ReadLine().Trim();
 
+            // Change Bulgarian with English and vice versa 
             var bgTranslator = new Translator(new Bulgarian());
             var fromBgToMorse = bgTranslator.Translate(input, true);
             Console.WriteLine(bgTranslator.LanguageName);
+            Console.WriteLine();
+
             Console.WriteLine(fromBgToMorse);
+            Console.WriteLine();
 
             var fromMorseToBg = bgTranslator.Translate(fromBgToMorse, false);
             Console.WriteLine(fromMorseToBg);

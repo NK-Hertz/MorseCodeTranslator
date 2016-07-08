@@ -1,12 +1,22 @@
 ﻿namespace MorseCodeTranslator
 {
+    using System.Linq;
+    using System.Text;
     using Languages;
-
+    
     public class Translator
     {
-        private ILanguage language;
+        private const char MORSE_CODE_CHAR_SEPARATOR = '/';
+        private const char LANGUAGE_WORD_SEPARATOR = ' ';
 
-        public Translator(ILanguage language)
+        private const string MORSE_CODE_LETTER_SPACE = "...";
+        private const string MORSE_CODE_WORD_SPACE = ".......";
+
+        private const int CHAR_TO_INT = 48;
+
+        private BaseLanguage language;
+
+        public Translator(BaseLanguage language)
         {
             this.language = language;
         }
@@ -21,14 +31,91 @@
             string result;
             if (toMorseCode)
             {
-                result = language.ToMorse(message);
+                result = ToMorse(message);
             }
             else
             {
-                result = language.FromMorse(message);
+                result = FromMorse(message);
             }
 
             return result;
+        }
+
+        private string ToMorse(string message)
+        {
+            var builder = new StringBuilder();
+
+            var words = message.ToLower().Split(LANGUAGE_WORD_SEPARATOR).ToList();
+
+            for (int i = 0; i < words.Count; i++)
+            {
+                var currentWord = words[i];
+                for (int j = 0; j < currentWord.Length; j++)
+                {
+                    var currentSymbol = currentWord[j];
+                    string currentSymbolInMorse = null;
+                    if (this.language.Numerals.ContainsKey(currentSymbol))
+                    {
+                        currentSymbolInMorse = this.language.Numerals[currentSymbol];
+                    }
+                    else if (this.language.SpecialCharacters.ContainsKey(currentSymbol))
+                    {
+                        currentSymbolInMorse = this.language.SpecialCharacters[currentSymbol];
+                    }
+                    else
+                    {
+                        currentSymbolInMorse = this.language.AlphabetToMorse[currentSymbol];
+                    }
+
+                    builder.Append(currentSymbolInMorse);
+
+                    if (j != currentWord.Length - 1)
+                    {
+                        builder.Append(MORSE_CODE_CHAR_SEPARATOR);
+                    }
+                }
+
+                builder.Append(LANGUAGE_WORD_SEPARATOR);
+            }
+
+            return builder.ToString().Trim();
+        }
+
+        private string FromMorse(string message)
+        {
+            var builder = new StringBuilder();
+
+            var words = message.Split(LANGUAGE_WORD_SEPARATOR).ToList();
+
+            for (int i = 0; i < words.Count; i++)
+            {
+                var currentWord = words[i].Split(MORSE_CODE_CHAR_SEPARATOR);
+                for (int j = 0; j < currentWord.Length; j++)
+                {
+                    var currentSymbol = currentWord[j];
+                    string currentSymbolInMorse = null;
+                    if (this.language.NumeralsFromMorse.ContainsKey(currentSymbol))
+                    {
+                        currentSymbolInMorse = (this.language.NumeralsFromMorse[currentSymbol] - CHAR_TO_INT).ToString();
+                    }
+                    else if (this.language.SpecialCharactersFromMorse.ContainsKey(currentSymbol))
+                    {
+                        currentSymbolInMorse = this.language.SpecialCharactersFromMorse[currentSymbol].ToString();
+                    }
+                    else
+                    {
+                        currentSymbolInMorse = this.language.AlphabetFromMorse[currentSymbol].ToString();
+                    }
+
+                    builder.Append(currentSymbolInMorse);
+                    //builder.Append(MORSE_CODE_LETTER_SPACE);
+                }
+
+                //builder.Append(MORSE_CODE_WORD_SPACE);
+                builder.Append(LANGUAGE_WORD_SEPARATOR);
+            }
+
+            return builder.ToString().Trim();
         }
     }
 }
