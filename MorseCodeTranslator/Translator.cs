@@ -3,12 +3,14 @@
     using System.Linq;
     using System.Text;
     using Languages;
-    
+    using System.Collections.Generic;
     public class Translator
     {
+        private const string MORSE_CODE_CHARACTERS = ".-/ ";
         private const char MORSE_CODE_CHAR_SEPARATOR = '/';
         private const char LANGUAGE_WORD_SEPARATOR = ' ';
         private const int CHAR_TO_INT = 48;
+        private const int MINUMUM_WORDS_TO_CHECK_IF_MESSAGE_IS_IN_MORSE = 3;
 
         private BaseLanguage language;
 
@@ -22,10 +24,11 @@
             get { return this.language.GetType().Name; }
         }
 
-        public string Translate(string message, bool toMorseCode)
+        public string Translate(string message)
         {
             string result;
-            if (toMorseCode)
+            var isInMorseCode = IsMessageInMorse(message);
+            if (!isInMorseCode)
             {
                 result = ToMorse(message);
             }
@@ -35,6 +38,37 @@
             }
 
             return result;
+        }
+
+        private bool IsMessageInMorse(string message)
+        {
+            var wholeWordIsInMorse = true;
+            var words = message.Trim().Split(LANGUAGE_WORD_SEPARATOR).ToList();
+            for (int i = 0; i < words.Count; i++)
+            {
+                var firstNWordsAreInMorse = i == MINUMUM_WORDS_TO_CHECK_IF_MESSAGE_IS_IN_MORSE - 1 && wholeWordIsInMorse;
+                if (firstNWordsAreInMorse)
+                {
+                    return true;
+                }
+
+                var currentWord = words[i].Trim();
+                for (int j = 0; j < currentWord.Length; j++)
+                {
+                    var currentLetter = currentWord[j];
+                    var currentLetterIsContainedInMorseCodeAlphabet = MORSE_CODE_CHARACTERS.Contains(currentLetter);
+                    if (!currentLetterIsContainedInMorseCodeAlphabet)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        wholeWordIsInMorse = currentLetterIsContainedInMorseCodeAlphabet && wholeWordIsInMorse;
+                    }
+                }
+            }
+
+            return true;
         }
 
         private string ToMorse(string message)

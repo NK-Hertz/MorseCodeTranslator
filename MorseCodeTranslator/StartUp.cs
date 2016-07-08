@@ -13,14 +13,14 @@
 
             // Change Bulgarian with English and vice versa 
             var bgTranslator = new Translator(new Bulgarian());
-            var fromBgToMorse = bgTranslator.Translate(input, true);
+            var fromBgToMorse = bgTranslator.Translate(input);
             Console.WriteLine(bgTranslator.LanguageName);
             Console.WriteLine();
 
             Console.WriteLine(fromBgToMorse);
             Console.WriteLine();
 
-            var fromMorseToBg = bgTranslator.Translate(fromBgToMorse, false);
+            var fromMorseToBg = bgTranslator.Translate(fromBgToMorse);
             Console.WriteLine(fromMorseToBg);
         }
     }
