@@ -10,6 +10,7 @@
         public static void Main()
         {
             var input = "Освен това бе забелязал, че магарето, този неразбран от хората четириног мислител, заплашително мърда уши, когато философите говорят глупости.";
+            //var input = "I say the whole world must learn of our peaceful ways...by force!";
             //var input = Console.ReadLine().Trim();
 
             // Change Bulgarian with English and vice versa 
