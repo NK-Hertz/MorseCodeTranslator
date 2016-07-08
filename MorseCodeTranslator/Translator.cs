@@ -8,10 +8,6 @@
     {
         private const char MORSE_CODE_CHAR_SEPARATOR = '/';
         private const char LANGUAGE_WORD_SEPARATOR = ' ';
-
-        private const string MORSE_CODE_LETTER_SPACE = "...";
-        private const string MORSE_CODE_WORD_SPACE = ".......";
-
         private const int CHAR_TO_INT = 48;
 
         private BaseLanguage language;
@@ -45,7 +41,7 @@
         {
             var builder = new StringBuilder();
 
-            var words = message.ToLower().Split(LANGUAGE_WORD_SEPARATOR).ToList();
+            var words = message.ToLower().Split(new char[] { LANGUAGE_WORD_SEPARATOR, MORSE_CODE_CHAR_SEPARATOR }).ToList();
 
             for (int i = 0; i < words.Count; i++)
             {
@@ -71,11 +67,16 @@
 
                     if (j != currentWord.Length - 1)
                     {
-                        builder.Append(MORSE_CODE_CHAR_SEPARATOR);
+                        builder.Append(LANGUAGE_WORD_SEPARATOR);
                     }
                 }
 
-                builder.Append(LANGUAGE_WORD_SEPARATOR);
+                if (i != words.Count - 1)
+                {
+                    builder.Append(LANGUAGE_WORD_SEPARATOR);
+                    builder.Append(MORSE_CODE_CHAR_SEPARATOR);
+                    builder.Append(LANGUAGE_WORD_SEPARATOR);
+                }
             }
 
             return builder.ToString().Trim();
@@ -85,11 +86,11 @@
         {
             var builder = new StringBuilder();
 
-            var words = message.Split(LANGUAGE_WORD_SEPARATOR).ToList();
+            var words = message.Split(MORSE_CODE_CHAR_SEPARATOR).ToList();
 
             for (int i = 0; i < words.Count; i++)
             {
-                var currentWord = words[i].Split(MORSE_CODE_CHAR_SEPARATOR);
+                var currentWord = words[i].Trim().Split(LANGUAGE_WORD_SEPARATOR);
                 for (int j = 0; j < currentWord.Length; j++)
                 {
                     var currentSymbol = currentWord[j];
@@ -108,10 +109,8 @@
                     }
 
                     builder.Append(currentSymbolInMorse);
-                    //builder.Append(MORSE_CODE_LETTER_SPACE);
                 }
 
-                //builder.Append(MORSE_CODE_WORD_SPACE);
                 builder.Append(LANGUAGE_WORD_SEPARATOR);
             }
 
